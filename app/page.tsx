@@ -1,13 +1,27 @@
-import { authOptions } from "@/lib/options";
-import { getServerSession } from "next-auth"
+"use client"
 
-export default async function Home() {
-  const session = await getServerSession(authOptions);
-  if(session) {
-    return <div className="bg-black min-h-screen text-white">
-      <img src="./favicon.ico" alt="" className="h-20 w-20"/>
-      {session.user?.email}
-      
-    </div>
-  }
+import User from "@/components/User";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+
+export default function Home() {
+  const session = useSession();
+  const [isverified, setIsVerified] = useState(false);
+  const [username, setUsername] = useState("");
+  useEffect(() => {
+    axios.post("/api/verify-email", {
+      email: session.data?.user?.email
+    }).then((response) => {
+      setIsVerified(response.data.isVerified);
+      setUsername(response.data.username);
+    }).catch((err) => {
+      console.log(err);
+    })
+  }, [isverified, username]);
+  return <div className="min-h-screen bg-gradient-to-b from-gray-950 to-gray-900 flex p-4 text-white">
+    <User email={
+      session.status === "unauthenticated" ? session.status : session.data?.user?.email
+    } isVerified={isverified} username={username}/>
+  </div>
 }

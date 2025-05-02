@@ -103,7 +103,7 @@ export default function Signin() {
                             Welcome Back
                         </h1>
                         <p className="text-gray-400">
-                            Sign in to continue your anonymous journey
+                            Sign in to continue your testimonials journey
                         </p>
                     </motion.div>
 

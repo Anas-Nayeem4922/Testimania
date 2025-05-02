@@ -131,7 +131,7 @@ export default function Signup() {
                             Create Account
                         </h1>
                         <p className="text-gray-400">
-                            Join Inkognito to start your anonymous journey
+                            Join Testimania to start your testimonials journey
                         </p>
                     </motion.div>
 
