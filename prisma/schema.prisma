@@ -29,7 +29,7 @@ model User {
 
 model Space {
   id                 String          @id @default(uuid())
-  name               String          @unique
+  name               String?          @unique
   header             String
   description        String
   userId             String
@@ -39,6 +39,19 @@ model Space {
   userSocials        Boolean?
   userAddress        Boolean?
   questions          Question[]
+  testimonials       Testimonial[]
+}
+
+model Testimonial {
+  id                 String        @id @default(uuid())
+  review             String
+  rating             Int
+  userName           String?
+  userEmail          String?
+  userSocials        String?
+  userAddress        String?
+  spaceId            String
+  space              Space         @relation(references: [id], fields: [spaceId])
 }
 
 model Question {
