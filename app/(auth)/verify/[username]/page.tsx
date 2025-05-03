@@ -48,6 +48,7 @@ export default function Verify() {
         email: response.data.email,
         password: window.password
       });
+      console.log(result);
       if(result?.url) {
         router.replace("/");
       }

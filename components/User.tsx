@@ -8,7 +8,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { AlertCircle, Check, LogOut, User2, UserPlus, UserRound } from "lucide-react"
+import { AlertCircle, Check, LayoutDashboard, LogOut, User2, UserPlus, UserRound } from "lucide-react"
 import { signOut } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -144,6 +144,17 @@ export default function User({ email, isVerified, username }: { email?: string |
                                     <motion.div variants={itemVariants} className="flex items-center gap-2 w-full">
                                         <LogOut className="h-4 w-4 text-gray-400" />
                                         <span>Log out</span>
+                                    </motion.div>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                    className="flex items-center gap-2 px-3 py-2 text-gray-300 hover:text-white focus:text-white hover:bg-gray-800 focus:bg-gray-800 rounded-md cursor-pointer transition-colors"
+                                    onClick={() => {
+                                        router.push("/dashboard");
+                                    }}
+                                >
+                                    <motion.div variants={itemVariants} className="flex items-center gap-2 w-full">
+                                        <LayoutDashboard className="h-4 w-4 text-gray-400" />
+                                        <span>Dashboard</span>
                                     </motion.div>
                                 </DropdownMenuItem>
                             </>

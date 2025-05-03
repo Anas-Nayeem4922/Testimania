@@ -10,7 +10,7 @@ datasource db {
 }
 
 model User {
-  id                String          @id @default(cuid())
+  id                String          @id @default(uuid())
   username          String
   email             String          @unique
   password          String
@@ -23,6 +23,31 @@ model User {
  
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
+  spaces            Space[]
+  questions         Question[]
+}
+
+model Space {
+  id                 String          @id @default(uuid())
+  name               String          @unique
+  header             String
+  description        String
+  userId             String
+  user               User           @relation(references: [id], fields: [userId])
+  userName           Boolean?
+  userEmail          Boolean?
+  userSocials        Boolean?
+  userAddress        Boolean?
+  questions          Question[]
+}
+
+model Question {
+  id                 Int            @id @default(autoincrement())
+  message            String
+  spaceId            String
+  userId             String
+  user               User           @relation(references: [id], fields: [userId])
+  space              Space          @relation(references: [id], fields: [spaceId])
 }
  
 model Account {
