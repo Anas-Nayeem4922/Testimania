@@ -4,13 +4,13 @@ import {
   NavBody,
   MobileNav,
   NavbarLogo,
-  NavbarButton,
   MobileNavHeader,
 } from "@/components/ui/resizable-navbar";
 import { useEffect, useState } from "react";
 import User from "./User";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { Button } from "./ui/button";
 
 export function NavbarDemo({ children } : { children: React.ReactNode }) {
 
@@ -35,11 +35,9 @@ export function NavbarDemo({ children } : { children: React.ReactNode }) {
         <NavBody>
           <NavbarLogo />
           <div className="flex items-center gap-4">
-            <NavbarButton variant="secondary">
             <User email={
                 session.status === "unauthenticated" ? session.status : session.data?.user?.email
               } isVerified={isverified} username={username}/>
-            </NavbarButton>
           </div>
         </NavBody>
 
