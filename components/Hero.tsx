@@ -1,5 +1,7 @@
 "use client";
 import { ThreeDMarquee } from "@/components/ui/3d-marquee";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
   const images = [
@@ -35,6 +37,10 @@ export default function Hero() {
     "https://www.figma.com/community/resource/62998d8e-124e-42b0-b36e-69d9af9df252/thumbnail",
     "https://onepagelove.imgix.net/2025/02/2025-02-24.jpeg?w=360&max-h=480&fit=crop&fp-y=0&auto=compress",
   ];
+
+  const router = useRouter();
+  const session = useSession();
+
   return (
     <div className="relative flex h-screen w-full min-w-full flex-col items-center justify-center overflow-hidden rounded-3xl">
       <h2 className="relative z-20 mx-auto max-w-4xl text-center text-2xl font-bold text-balance text-white md:text-4xl lg:text-6xl">
@@ -49,7 +55,13 @@ export default function Hero() {
       </p>
 
       <div className="relative z-20 flex flex-wrap items-center justify-center gap-4 pt-4">
-        <button className="rounded-md bg-sky-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-black focus:outline-none cursor-pointer">
+        <button onClick={() => {
+          if(session.status === "unauthenticated") {
+            router.push("/signup");
+          } else {
+            router.push("/dashboard");
+          }
+        }} className="rounded-md bg-sky-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-black focus:outline-none cursor-pointer">
           Join the cult
         </button>
         <button className="rounded-md border border-white/20 bg-white/10 px-6 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20 focus:ring-2 focus:ring-white/20 focus:ring-offset-2 focus:ring-offset-black focus:outline-none">

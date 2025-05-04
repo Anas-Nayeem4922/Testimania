@@ -25,6 +25,7 @@ model User {
   updatedAt         DateTime        @updatedAt
   spaces            Space[]
   questions         Question[]
+  testimonials      Testimonial[]
 }
 
 model Space {
@@ -51,7 +52,9 @@ model Testimonial {
   userSocials        String?
   userAddress        String?
   spaceId            String
+  userId             String
   space              Space         @relation(references: [id], fields: [spaceId])
+  user               User          @relation(references: [id], fields: [userId])
 }
 
 model Question {

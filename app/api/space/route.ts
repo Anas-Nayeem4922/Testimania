@@ -90,3 +90,42 @@ export async function GET(req: Request) {
         );
     }
 }
+
+export async function DELETE(req: Request) {
+    const session = await getServerSession(authOptions);
+    const user: User = session?.user as User;
+    if (!session || !session.user) {
+        return Response.json({
+            success: false,
+            message: "User not logged-in",
+        });
+    }
+    try {
+        const userId = user.id;
+        const url = new URL(req.url);
+        const spaceId = url.searchParams.get("spaceId") || "";
+        await client.question.deleteMany({
+            where: {
+                spaceId,
+            },
+        });
+        await client.space.delete({
+            where: {
+                userId,
+                id: spaceId,
+            },
+        });
+        return Response.json({
+            success: true,
+            message: "Space deleted successfully",
+        });
+    } catch (err) {
+        return Response.json(
+            {
+                success: false,
+                message: err,
+            },
+            { status: 500 }
+        );
+    }
+}

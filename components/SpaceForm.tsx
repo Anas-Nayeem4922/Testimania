@@ -16,7 +16,7 @@ import { spaceSchema, spaceType } from "@/schemas/spaceSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "./ui/textarea";
 import { useEffect, useState } from "react";
-import { Question } from "@/app/generated/prisma/client";
+import { Question, Space } from "@/app/generated/prisma/client";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Plus, Pencil, Trash2, Save, X, ChevronDown } from "lucide-react";
@@ -32,6 +32,7 @@ import { useRouter } from "next/navigation";
 
 export default function SpaceForm({ spaceId }: { spaceId: string }) {
     const [questions, setQuestions] = useState<Question[]>([]);
+    const [spaceData, setSpaceData] = useState<Space>()
     const [newQuestion, setNewQuestion] = useState("");
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editingText, setEditingText] = useState("");
@@ -40,18 +41,9 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
     const [spaceName, setSpaceName] = useState("");
 
     const router = useRouter();
-
+    console.log(spaceData);
     const form = useForm<spaceType>({
-        resolver: zodResolver(spaceSchema),
-        defaultValues: {
-            name: "",
-            header: "",
-            description: "",
-            userName: false,
-            userAddress: false,
-            userSocials: false,
-            userEmail: false
-        }
+        resolver: zodResolver(spaceSchema)
     });
 
 
@@ -87,10 +79,35 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
         }
     };
 
+    const fetchSpaceData = async () => {
+        try {
+            const response = await axios.get(`/api/space/${spaceId}`);
+            setSpaceData(response.data.message);
+        } catch (error) {
+            toast.error("Failed to fetch default space data");
+        }
+    }
+
     useEffect(() => {
         if (!spaceId) return;
         fetchQuestions();
+        fetchSpaceData();
     }, [spaceId]);
+
+    useEffect(() => {
+        if (spaceData) {
+          form.reset({
+            name: spaceData.name || "",
+            header: spaceData.header || "",
+            description: spaceData.description || "",
+            userName: spaceData.userName || false,
+            userAddress: spaceData.userAddress || false,
+            userSocials: spaceData.userSocials || false,
+            userEmail: spaceData.userEmail || false
+          });
+        }
+      }, [spaceData, form]);
+      
 
     const addQuestion = async () => {
         if (!newQuestion.trim()) return;
@@ -330,6 +347,7 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
                                     onClick={addQuestion}
                                     disabled={isLoading || !newQuestion.trim()}
                                     className="bg-gray-800 hover:bg-gray-700 text-gray-200 px-6"
+                                    type="button"
                                 >
                                     {isLoading ? (
                                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -365,6 +383,7 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
                                                     disabled={isLoading}
                                                     size="sm"
                                                     className="bg-gray-700 hover:bg-gray-600"
+                                                    type="button"
                                                 >
                                                     <Save className="h-4 w-4" />
                                                 </Button>
@@ -372,6 +391,7 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
                                                     onClick={() => setEditingId(null)}
                                                     size="sm"
                                                     variant="destructive"
+                                                    type="button"
                                                 >
                                                     <X className="h-4 w-4" />
                                                 </Button>
@@ -388,6 +408,7 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
                                                     }}
                                                     size="sm"
                                                     className="bg-gray-700 hover:bg-gray-600"
+                                                    type="button"
                                                 >
                                                     <Pencil className="h-4 w-4" />
                                                 </Button>
@@ -395,6 +416,7 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
                                                     onClick={() => deleteQuestion(question.id)}
                                                     size="sm"
                                                     variant="destructive"
+                                                    type="button"
                                                 >
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
