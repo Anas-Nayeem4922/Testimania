@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         console.log(err);
         return Response.json({
             success: false,
-            message: err as Error,
+            message: err,
         });
     }
 }

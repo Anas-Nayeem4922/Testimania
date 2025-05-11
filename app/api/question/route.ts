@@ -48,18 +48,21 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-    const session = await getServerSession(authOptions);
-    const user: User = session?.user as User;
-    if (!session || !session.user) {
-        return Response.json({
-            success: false,
-            message: "User not logged-in",
-        });
-    }
     try {
-        const userId = user.id;
         const url = new URL(req.url);
         const spaceId = url.searchParams.get("spaceId") || "";
+        const space = await client.space.findFirst({
+            where: {
+                id: spaceId,
+            },
+        });
+        if (!space) {
+            return Response.json({
+                success: false,
+                message: "No such space exists with this id",
+            });
+        }
+        const userId = space.userId;
         const questions = await client.question.findMany({
             where: {
                 userId,

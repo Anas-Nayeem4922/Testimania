@@ -8,17 +8,20 @@ export async function POST(
     req: Request,
     { params }: { params: Promise<{ spaceId: string }> }
 ) {
-    const session = await getServerSession(authOptions);
-    const user: User = session?.user as User;
-    if (!session || !session.user) {
-        return Response.json({
-            success: false,
-            message: "User not logged-in",
-        });
-    }
     try {
-        const userId = user.id;
         const spaceId = (await params).spaceId;
+        const space = await client.space.findFirst({
+            where: {
+                id: spaceId,
+            },
+        });
+        if (!space) {
+            return Response.json({
+                success: false,
+                message: "No such space exists with this id",
+            });
+        }
+        const userId = space.userId;
         const body = await req.json();
         const { success, error, data } = testimonialSchema.safeParse(body);
         if (!success) {

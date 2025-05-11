@@ -30,7 +30,7 @@ model User {
 
 model Space {
   id                 String          @id @default(uuid())
-  name               String?          @unique
+  name               String?         @unique
   header             String
   description        String
   userId             String
