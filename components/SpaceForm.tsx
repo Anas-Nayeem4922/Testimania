@@ -42,7 +42,16 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
 
     const router = useRouter();
     const form = useForm<spaceType>({
-        resolver: zodResolver(spaceSchema)
+        resolver: zodResolver(spaceSchema),
+        defaultValues: {
+            name: "",
+            header: "",
+            description: "",
+            userName: false,
+            userEmail: false,
+            userSocials: false,
+            userAddress: false
+        }
     });
 
 
@@ -221,7 +230,7 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
                                 <FormItem>
                                     <FormLabel className="text-lg font-semibold">Space name</FormLabel>
                                     <FormControl>
-                                        <Input 
+                                        <Input
                                             {...field}
                                             onChange={(e) => {
                                                 field.onChange(e);
