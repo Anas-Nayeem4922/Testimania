@@ -203,22 +203,22 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
                         <div className="flex items-center gap-2">
                             <User className="w-5 h-5 text-gray-400" />
                             <span className="text-gray-300">Name</span>
-                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userName} disabled />
+                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userName ?? false} disabled />
                         </div>
                         <div className="flex items-center gap-2">
                             <Mail className="w-5 h-5 text-gray-400" />
                             <span className="text-gray-300">Email</span>
-                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userEmail} disabled />
+                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userEmail ?? false} disabled />
                         </div>
                         <div className="flex items-center gap-2">
                             <MapPin className="w-5 h-5 text-gray-400" />
                             <span className="text-gray-300">Address</span>
-                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userAddress} disabled />
+                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userAddress ?? false} disabled />
                         </div>
                         <div className="flex items-center gap-2">
                             <Globe className="w-5 h-5 text-gray-400" />
                             <span className="text-gray-300">Socials</span>
-                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userSocials} disabled />
+                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userSocials ?? false} disabled />
                         </div>
                     </motion.div>
 
