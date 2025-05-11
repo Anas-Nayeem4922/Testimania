@@ -1,7 +1,6 @@
 "use client"
 
 import SpaceForm from "@/components/SpaceForm";
-import axios from "axios";
 import { useParams } from "next/navigation"
 
 export default function Space() {

@@ -41,7 +41,6 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
     const [spaceName, setSpaceName] = useState("");
 
     const router = useRouter();
-    console.log(spaceData);
     const form = useForm<spaceType>({
         resolver: zodResolver(spaceSchema)
     });
@@ -232,7 +231,7 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
                                         />
                                     </FormControl>
                                     <FormDescription className="text-gray-400">
-                                        Public URL is: testimania.ezzcrafts.com/{spaceName || "your-space"}
+                                        Public URL is: testimania.ezzcrafts.com/testimonial/{spaceName.replaceAll(" ", "-").toLowerCase() || "your-space"}
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Space } from "@/app/generated/prisma/client";
-import { Edit2, Trash2, Calendar } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { motion } from "framer-motion";
 import {
@@ -14,8 +14,8 @@ import {
 
 interface SpaceCardProps {
   space: Space;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit: (e: React.MouseEvent) => void;
+  onDelete: (e: React.MouseEvent) => void;
 }
 
 export function SpaceCard({ space, onEdit, onDelete }: SpaceCardProps) {
@@ -35,7 +35,7 @@ export function SpaceCard({ space, onEdit, onDelete }: SpaceCardProps) {
             <Button
               size="sm"
               variant="ghost"
-              className="text-gray-400 hover:text-gray-200 hover:bg-gray-700/50"
+              className="text-gray-400 hover:text-gray-200 hover:bg-gray-700/50 cursor-pointer"
               onClick={onEdit}
             >
               <Edit2 className="w-4 h-4" />
@@ -43,7 +43,7 @@ export function SpaceCard({ space, onEdit, onDelete }: SpaceCardProps) {
             <Button
               size="sm"
               variant="ghost"
-              className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+              className="text-red-400 hover:text-red-300 hover:bg-red-900/20 cursor-pointer"
               onClick={onDelete}
             >
               <Trash2 className="w-4 h-4" />

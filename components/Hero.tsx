@@ -37,7 +37,7 @@ export default function Hero() {
     "https://www.figma.com/community/resource/62998d8e-124e-42b0-b36e-69d9af9df252/thumbnail",
     "https://onepagelove.imgix.net/2025/02/2025-02-24.jpeg?w=360&max-h=480&fit=crop&fp-y=0&auto=compress",
   ];
-
+  
   const router = useRouter();
   const session = useSession();
 

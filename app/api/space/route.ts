@@ -32,7 +32,7 @@ export async function POST(req: Request) {
                 id: spaceId,
             },
             data: {
-                name: data.name,
+                name: data.name.toLowerCase(),
                 header: data.header,
                 description: data.description,
                 userName: data.userName,
@@ -105,6 +105,11 @@ export async function DELETE(req: Request) {
         const url = new URL(req.url);
         const spaceId = url.searchParams.get("spaceId") || "";
         await client.question.deleteMany({
+            where: {
+                spaceId,
+            },
+        });
+        await client.testimonial.deleteMany({
             where: {
                 spaceId,
             },

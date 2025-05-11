@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 import User from "./User";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { Button } from "./ui/button";
 
 export function NavbarDemo({ children } : { children: React.ReactNode }) {
 

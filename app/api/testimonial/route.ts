@@ -27,7 +27,9 @@ export async function GET(req: Request) {
             success: true,
             message: "User found",
             totalTestimonials: testimonials.length,
-            averageRating: totalRating / testimonials.length,
+            averageRating: parseFloat(
+                (totalRating / testimonials.length).toFixed(2)
+            ),
         });
     } catch (err) {
         return Response.json({
