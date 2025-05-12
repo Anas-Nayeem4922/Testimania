@@ -4,7 +4,6 @@ import { Space } from "@/app/generated/prisma/client";
 import { CardSpotlightDemo } from "@/components/Card";
 import { SpaceCard } from "@/components/SpaceCard";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import { BookHeart, PartyPopper, Plus, Star } from "lucide-react";
 import Link from "next/link";

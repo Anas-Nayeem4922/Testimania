@@ -84,40 +84,41 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
         fetchData();
     }, []);
 
-    const containerVariants = {
+        const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.1
+                staggerChildren: 0.15,
+                delayChildren: 0.2
             }
         }
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
+        hidden: { opacity: 0, y: 30 },
         visible: {
             opacity: 1,
             y: 0,
             transition: {
                 type: "spring",
                 stiffness: 100,
-                damping: 10
+                damping: 12
             }
         }
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-b from-gray-950 to-gray-900 flex items-center justify-center">
-                .
+            <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black flex items-center justify-center">
+                hello
                 <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="flex flex-col items-center gap-4"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex flex-col items-center gap-6"
                 >
-                    <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-                    <p className="text-gray-400">Loading space data...</p>
+                    <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
+                    <p className="text-gray-400 text-lg">Loading space data...</p>
                 </motion.div>
             </div>
         );
@@ -125,185 +126,196 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gradient-to-b from-gray-950 to-gray-900 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black flex items-center justify-center">
                 <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-red-400 text-center"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center"
                 >
-                    <p>{error}</p>
-                    <button
+                    <p className="text-red-400 text-xl mb-6">{error}</p>
+                    <Button
                         onClick={() => window.location.reload()}
-                        className="mt-4 px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700 transition-colors"
+                        className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
                     >
-                        Retry
-                    </button>
+                        Try Again
+                    </Button>
                 </motion.div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-950 to-gray-900 p-8 pt-32">
+        <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black p-8 pt-32">
             <motion.div
                 initial="hidden"
                 animate="visible"
                 variants={containerVariants}
-                className="max-w-6xl mx-auto space-y-12"
+                className="max-w-7xl mx-auto"
             >
-                <div className="space-y-3">
-                        <h2 className="text-lg font-semibold text-white">Your Profile Link</h2>
-                        <div className="flex items-center gap-2">
-                            <div className="flex-1 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-3 font-mono text-sm">
-                                {profileUrl}
-                            </div>
-                            <Button
-                                onClick={copyToClipboard}
-                                variant="outline"
-                                className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                            >
-                                <LinkIcon className="w-4 h-4" />
-                                Copy
-                            </Button>
+                .
+                {/* Profile Link Section */}
+                <motion.div 
+                    variants={itemVariants}
+                    className="mb-8 bg-gray-800/30 rounded-xl border border-gray-700/50 p-6"
+                >
+                    <h2 className="text-xl font-semibold text-gray-200 mb-4">Share this with your users to gather testimonials</h2>
+                    <div className="flex items-center gap-3">
+                        <div className="flex-1 bg-gray-900/50 rounded-lg border border-gray-700/50 p-3 font-mono text-sm text-gray-300">
+                            {profileUrl}
                         </div>
+                        <Button
+                            onClick={copyToClipboard}
+                            className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
+                        >
+                            <LinkIcon className="w-4 h-4 mr-2" />
+                            Copy Link
+                        </Button>
                     </div>
-                {/* Space Details and Questions Section */}
-                <motion.div variants={itemVariants} className="bg-gray-800/30 rounded-xl border border-gray-700 p-8">
-                    <div className="text-center mb-8">
-                        <motion.h1 
-                            className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-400"
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                        >
-                            {spaceData?.name}
-                        </motion.h1>
-                        <motion.p 
-                            className="text-gray-400 mt-2"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                        >
-                            {spaceData?.header}
-                        </motion.p>
-                        <motion.p 
-                            className="text-gray-500 mt-4"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3 }}
-                        >
-                            {spaceData?.description}
-                        </motion.p>
-                    </div>
+                </motion.div>
 
-                    {/* User Preferences */}
+                <div className="flex flex-col lg:flex-row gap-8">
+                    {/* Space Details Section */}
                     <motion.div 
-                        className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
                         variants={itemVariants}
+                        className="lg:w-2/5"
                     >
-                        <div className="flex items-center gap-2">
-                            <User className="w-5 h-5 text-gray-400" />
-                            <span className="text-gray-300">Name</span>
-                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userName ?? false} disabled />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Mail className="w-5 h-5 text-gray-400" />
-                            <span className="text-gray-300">Email</span>
-                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userEmail ?? false} disabled />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <MapPin className="w-5 h-5 text-gray-400" />
-                            <span className="text-gray-300">Address</span>
-                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userAddress ?? false} disabled />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Globe className="w-5 h-5 text-gray-400" />
-                            <span className="text-gray-300">Socials</span>
-                            <Switch className="data-[state=checked]:bg-white" checked={spaceData?.userSocials ?? false} disabled />
-                        </div>
-                    </motion.div>
+                        <div className="bg-gray-800/30 rounded-xl border border-gray-700/50 p-8 sticky top-32">
+                            <motion.div
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-center mb-8"
+                            >
+                                <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+                                    {spaceData?.name}
+                                </h1>
+                                <p className="text-gray-300 mt-3">{spaceData?.header}</p>
+                                <p className="text-gray-500 mt-4">{spaceData?.description}</p>
+                            </motion.div>
 
-                    {/* Questions */}
-                    <motion.div variants={itemVariants}>
-                        <h2 className="text-2xl font-semibold text-gray-200 mb-6 flex items-center gap-2">
-                            <MessageSquare className="w-6 h-6" />
-                            Questions
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <AnimatePresence>
-                                {questions.map((question, index) => (
+                            {/* User Preferences */}
+                            <div className="grid grid-cols-2 gap-4 mb-8">
+                                {[
+                                    { icon: User, label: "Name", value: spaceData?.userName },
+                                    { icon: Mail, label: "Email", value: spaceData?.userEmail },
+                                    { icon: MapPin, label: "Address", value: spaceData?.userAddress },
+                                    { icon: Globe, label: "Socials", value: spaceData?.userSocials }
+                                ].map(({ icon: Icon, label, value }, index) => (
                                     <motion.div
-                                        key={question.id}
+                                        key={label}
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: index * 0.1 }}
-                                        className="bg-gray-800/50 rounded-lg p-6 border border-gray-700"
+                                        className="flex items-center gap-2 bg-gray-900/30 p-3 rounded-lg"
                                     >
-                                        <p className="text-gray-300">{question.message}</p>
+                                        <Icon className="w-5 h-5 text-gray-400" />
+                                        <span className="text-gray-300">{label}</span>
+                                        <Switch 
+                                            className="data-[state=checked]:bg-gradient-to-r from-purple-500 to-blue-500" 
+                                            checked={value ?? false} 
+                                            disabled 
+                                        />
+                                    </motion.div>
+                                ))}
+                            </div>
+
+                            {/* Questions */}
+                            <div>
+                                <h2 className="text-xl font-semibold text-gray-200 mb-4 flex items-center gap-2">
+                                    <MessageSquare className="w-5 h-5" />
+                                    Questions
+                                </h2>
+                                <div className="space-y-3">
+                                    <AnimatePresence>
+                                        {questions.map((question, index) => (
+                                            <motion.div
+                                                key={question.id}
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: index * 0.1 }}
+                                                className="bg-gray-900/30 rounded-lg p-4 border border-gray-700/50"
+                                            >
+                                                <p className="text-gray-300">{question.message}</p>
+                                            </motion.div>
+                                        ))}
+                                    </AnimatePresence>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* Testimonials Section */}
+                    <motion.div 
+                        variants={itemVariants}
+                        className="lg:w-3/5"
+                    >
+                        <h2 className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-6 flex items-center gap-2">
+                            <Star className="w-6 h-6 text-purple-400" />
+                            Testimonials
+                        </h2>
+                        <div className="space-y-6">
+                            <AnimatePresence>
+                                {testimonials.map((testimonial, index) => (
+                                    <motion.div
+                                        key={testimonial.id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.1 }}
+                                    >
+                                        <Card className="bg-gray-800/30 border-gray-700/50 hover:bg-gray-800/40 transition-all duration-300">
+                                            <CardHeader>
+                                                <div className="flex justify-between items-start">
+                                                    <div className="space-y-2">
+                                                        {testimonial.userName && (
+                                                            <div className="flex items-center gap-2">
+                                                                <User className="w-4 h-4 text-gray-400" />
+                                                                <CardTitle className="text-gray-200">
+                                                                    Name: {testimonial.userName}
+                                                                </CardTitle>
+                                                            </div>
+                                                        )}
+                                                        {testimonial.userEmail && (
+                                                            <div className="flex items-center gap-2">
+                                                                <Mail className="w-4 h-4 text-gray-400" />
+                                                                <CardDescription className="text-gray-400">
+                                                                    Email: {testimonial.userEmail}
+                                                                </CardDescription>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex">
+                                                        {[...Array(testimonial.rating)].map((_, i) => (
+                                                            <Star
+                                                                key={i}
+                                                                className="w-4 h-4 text-yellow-400 fill-yellow-400"
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </CardHeader>
+                                            <CardContent className="space-y-3">
+                                                <p className="text-gray-300">{testimonial.review}</p>
+                                                {testimonial.userAddress && (
+                                                    <div className="flex items-center gap-2 text-gray-400">
+                                                        <MapPin className="w-4 h-4" />
+                                                        Address: {testimonial.userAddress}
+                                                    </div>
+                                                )}
+                                            </CardContent>
+                                            {testimonial.userSocials && (
+                                                <CardFooter>
+                                                    <div className="flex items-center gap-2 text-gray-400">
+                                                        <Globe className="w-4 h-4" />
+                                                        Socials: {testimonial.userSocials}
+                                                    </div>
+                                                </CardFooter>
+                                            )}
+                                        </Card>
                                     </motion.div>
                                 ))}
                             </AnimatePresence>
                         </div>
                     </motion.div>
-                </motion.div>
-
-                {/* Testimonials Section */}
-                <motion.div variants={itemVariants}>
-                    <h2 className="text-2xl font-semibold text-gray-200 mb-6 flex items-center gap-2">
-                        <Star className="w-6 h-6" />
-                        Testimonials
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <AnimatePresence>
-                            {testimonials.map((testimonial, index) => (
-                                <motion.div
-                                    key={testimonial.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: index * 0.1 }}
-                                >
-                                    <Card className="bg-gray-800/30 border-gray-700 hover:bg-gray-800/40 transition-colors">
-                                        <CardHeader>
-                                            <div className="flex justify-between items-start">
-                                                <div className="flex items-center gap-2">
-                                                    <User className="w-5 h-5 text-gray-400" />
-                                                    <CardTitle className="text-gray-200">
-                                                        {testimonial.userName || "Anonymous"}
-                                                    </CardTitle>
-                                                </div>
-                                                <div className="flex">
-                                                    {[...Array(testimonial.rating)].map((_, i) => (
-                                                        <Star
-                                                            key={i}
-                                                            className="w-4 h-4 text-yellow-400 fill-yellow-400"
-                                                        />
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            {testimonial.userEmail && (
-                                                <CardDescription className="text-gray-400">
-                                                    {testimonial.userEmail}
-                                                </CardDescription>
-                                            )}
-                                        </CardHeader>
-                                        <CardContent>
-                                            <p className="text-gray-300">{testimonial.review}</p>
-                                            {testimonial.userAddress && (
-                                                <p className="text-gray-500 mt-2">
-                                                    {testimonial.userAddress}
-                                                </p>
-                                            )}
-                                        </CardContent>
-                                        {testimonial.userSocials && (
-                                            <CardFooter className="text-gray-400 text-sm">
-                                                {testimonial.userSocials}
-                                            </CardFooter>
-                                        )}
-                                    </Card>
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
-                    </div>
-                </motion.div>
+                </div>
             </motion.div>
         </div>
     );

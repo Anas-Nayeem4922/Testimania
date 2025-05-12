@@ -1,6 +1,6 @@
 "use client"
 
-import { useForm } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -12,14 +12,13 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { spaceSchema, spaceType } from "@/schemas/spaceSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { spaceType } from "@/schemas/spaceSchema";
 import { Textarea } from "./ui/textarea";
-import { useEffect, useState } from "react";
-import { Question, Space } from "@/app/generated/prisma/client";
+import { useState } from "react";
+import { Question } from "@/app/generated/prisma/client";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Plus, Pencil, Trash2, Save, X, ChevronDown } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, Save, X } from "lucide-react";
 import { toast } from "sonner";
 import { Checkbox } from "./ui/checkbox";
 import {
@@ -30,9 +29,17 @@ import {
 } from "@/components/ui/accordion";
 import { useRouter } from "next/navigation";
 
-export default function SpaceForm({ spaceId }: { spaceId: string }) {
-    const [questions, setQuestions] = useState<Question[]>([]);
-    const [spaceData, setSpaceData] = useState<Space>()
+export default function SpaceForm({ 
+    spaceId,
+    fetchQuestions,
+    form,
+    questions
+ }: { 
+    spaceId: string,
+    fetchQuestions: () => Promise<void>,
+    form: UseFormReturn<spaceType>,
+    questions: Question[]
+ }) {
     const [newQuestion, setNewQuestion] = useState("");
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editingText, setEditingText] = useState("");
@@ -41,18 +48,6 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
     const [spaceName, setSpaceName] = useState("");
 
     const router = useRouter();
-    const form = useForm<spaceType>({
-        resolver: zodResolver(spaceSchema),
-        defaultValues: {
-            name: "",
-            header: "",
-            description: "",
-            userName: false,
-            userEmail: false,
-            userSocials: false,
-            userAddress: false
-        }
-    });
 
 
     const onSubmit = async (data: spaceType) => {
@@ -77,44 +72,6 @@ export default function SpaceForm({ spaceId }: { spaceId: string }) {
             setIsSubmitting(false);
         }
     }
-
-    const fetchQuestions = async () => {
-        try {
-            const response = await axios.get(`/api/question?spaceId=${spaceId}`);
-            setQuestions(response.data.message);
-        } catch (error) {
-            toast.error("Failed to fetch questions");
-        }
-    };
-
-    const fetchSpaceData = async () => {
-        try {
-            const response = await axios.get(`/api/space/${spaceId}`);
-            setSpaceData(response.data.message);
-        } catch (error) {
-            toast.error("Failed to fetch default space data");
-        }
-    }
-
-    useEffect(() => {
-        if (!spaceId) return;
-        fetchQuestions();
-        fetchSpaceData();
-    }, [spaceId]);
-
-    useEffect(() => {
-        if (spaceData) {
-          form.reset({
-            name: spaceData.name || "",
-            header: spaceData.header || "",
-            description: spaceData.description || "",
-            userName: spaceData.userName || false,
-            userAddress: spaceData.userAddress || false,
-            userSocials: spaceData.userSocials || false,
-            userEmail: spaceData.userEmail || false
-          });
-        }
-      }, [spaceData, form]);
       
 
     const addQuestion = async () => {
