@@ -176,7 +176,7 @@ export default function Testimonial({ params } : { params: Promise<{ spaceName: 
                                             <FormItem>
                                                 <FormLabel className="text-gray-200">Name</FormLabel>
                                                 <FormControl>
-                                                    <Input
+                                                    <Input required={true}
                                                         placeholder="Enter your name"
                                                         className="bg-gray-800/50 border-gray-700 focus-visible:border-gray-600 focus-visible:ring-gray-500 text-gray-200 placeholder-gray-500"
                                                         {...field}
@@ -198,7 +198,7 @@ export default function Testimonial({ params } : { params: Promise<{ spaceName: 
                                             <FormItem>
                                                 <FormLabel className="text-gray-200">Email</FormLabel>
                                                 <FormControl>
-                                                    <Input
+                                                    <Input required={true}
                                                         type="email"
                                                         placeholder="Enter your email"
                                                         className="bg-gray-800/50 border-gray-700 focus-visible:border-gray-600 focus-visible:ring-gray-500 text-gray-200 placeholder-gray-500"
@@ -221,7 +221,7 @@ export default function Testimonial({ params } : { params: Promise<{ spaceName: 
                                             <FormItem>
                                                 <FormLabel className="text-gray-200">Address</FormLabel>
                                                 <FormControl>
-                                                    <Input
+                                                    <Input required={true}
                                                         placeholder="Enter your address"
                                                         className="bg-gray-800/50 border-gray-700 focus-visible:border-gray-600 focus-visible:ring-gray-500 text-gray-200 placeholder-gray-500"
                                                         {...field}
@@ -243,7 +243,7 @@ export default function Testimonial({ params } : { params: Promise<{ spaceName: 
                                             <FormItem>
                                                 <FormLabel className="text-gray-200">Social Media Links</FormLabel>
                                                 <FormControl>
-                                                    <Input
+                                                    <Input required={true}
                                                         placeholder="Enter your social media links"
                                                         className="bg-gray-800/50 border-gray-700 focus-visible:border-gray-600 focus-visible:ring-gray-500 text-gray-200 placeholder-gray-500"
                                                         {...field}

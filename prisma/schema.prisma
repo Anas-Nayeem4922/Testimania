@@ -47,6 +47,7 @@ model Testimonial {
   id                 String        @id @default(uuid())
   review             String
   rating             Int
+  isLiked            Boolean       @default(false)
   userName           String?
   userEmail          String?
   userSocials        String?
