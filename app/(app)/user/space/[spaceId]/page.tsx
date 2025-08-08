@@ -4,7 +4,7 @@ import { Question, Space, Testimonial } from "@/app/generated/prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Star, MessageSquare, User, Mail, MapPin, Globe, LinkIcon, Heart, HeartIcon } from "lucide-react";
+import { Star, MessageSquare, User, Mail, MapPin, Globe, LinkIcon, Heart, HeartIcon, Copy, Grid3X3, RotateCcw } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -17,6 +17,8 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Dialog, DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
+import { DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
 
 export default function SpaceInfo({ params } : { params: Promise<{ spaceId: string }>}) {
   const [spaceData, setSpaceData] = useState<Space>();
@@ -24,8 +26,9 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [layout, setLayout] = useState<string>("carousel");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const router = useRouter();
 
   const fetchSpaceData = async () => {
       try {
@@ -65,12 +68,21 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
 
   const baseUrl = `${window.location.protocol}//${window.location.host}`
   const spaceName = spaceData?.name?.replaceAll(" ", "-").toLowerCase();
-  const profileUrl = `${baseUrl}/testimonial/${spaceName}`
+  const profileUrl = `${baseUrl}/testimonial/${spaceName}`;
+  const layoutUrl = `${baseUrl}/iframe/${spaceData?.id}/${layout}`;
+  const layoutCode = `<iframe src=${layoutUrl}></iframe>`
 
   const copyToClipboard = () => {
       navigator.clipboard.writeText(profileUrl)
       toast.success("Success", {
           description: "URL copied successfully"
+      })
+  }
+
+  const copyLayoutCode = () => {
+      navigator.clipboard.writeText(layoutCode);
+      toast.success("Success", {
+          description: "Layout Code copied successfully"
       })
   }
 
@@ -134,10 +146,22 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
       }
   };
 
+  const dialogVariants = {
+      hidden: { opacity: 0, scale: 0.95 },
+      visible: { 
+          opacity: 1, 
+          scale: 1,
+          transition: {
+              type: "spring",
+              stiffness: 300,
+              damping: 30
+          }
+      }
+  };
+
   if (loading) {
       return (
           <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black flex items-center justify-center">
-              .
               <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -171,31 +195,32 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
   }
 
   return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black p-8 pt-32">
+      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black p-8 pt-32">.
           <motion.div
               initial="hidden"
               animate="visible"
               variants={containerVariants}
               className="max-w-7xl mx-auto"
           >
-              .
               {/* Profile Link Section */}
               <motion.div 
                   variants={itemVariants}
-                  className="mb-8 bg-gray-800/30 rounded-xl border border-gray-700/50 p-6"
+                  className="mb-8 bg-gray-800/30 rounded-xl border border-gray-700/50 p-6 backdrop-blur-sm"
               >
                   <h2 className="text-xl font-semibold text-gray-200 mb-4">Share this with your users to gather testimonials</h2>
                   <div className="flex items-center gap-3">
                       <div className="flex-1 bg-gray-900/50 rounded-lg border border-gray-700/50 p-3 font-mono text-sm text-gray-300">
                           {profileUrl}
                       </div>
-                      <Button
-                          onClick={copyToClipboard}
-                          className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
-                      >
-                          <LinkIcon className="w-4 h-4 mr-2" />
-                          Copy Link
-                      </Button>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                          <Button
+                              onClick={copyToClipboard}
+                              className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white shadow-lg"
+                          >
+                              <LinkIcon className="w-4 h-4 mr-2" />
+                              Copy Link
+                          </Button>
+                      </motion.div>
                   </div>
               </motion.div>
 
@@ -205,7 +230,7 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
                       variants={itemVariants}
                       className="lg:w-2/5"
                   >
-                      <div className="bg-gray-800/30 rounded-xl border border-gray-700/50 p-8 sticky top-32">
+                      <div className="bg-gray-800/30 rounded-xl border border-gray-700/50 p-8 sticky top-32 backdrop-blur-sm">
                           <motion.div
                               initial={{ opacity: 0, y: -20 }}
                               animate={{ opacity: 1, y: 0 }}
@@ -231,7 +256,7 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
                                       initial={{ opacity: 0, x: -20 }}
                                       animate={{ opacity: 1, x: 0 }}
                                       transition={{ delay: index * 0.1 }}
-                                      className="flex items-center gap-2 bg-gray-900/30 p-3 rounded-lg"
+                                      className="flex items-center gap-2 bg-gray-900/30 p-3 rounded-lg hover:bg-gray-900/40 transition-colors"
                                   >
                                       <Icon className="w-5 h-5 text-gray-400" />
                                       <span className="text-gray-300">{label}</span>
@@ -258,7 +283,7 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
                                               initial={{ opacity: 0, y: 10 }}
                                               animate={{ opacity: 1, y: 0 }}
                                               transition={{ delay: index * 0.1 }}
-                                              className="bg-gray-900/30 rounded-lg p-4 border border-gray-700/50"
+                                              className="bg-gray-900/30 rounded-lg p-4 border border-gray-700/50 hover:bg-gray-900/40 transition-colors"
                                           >
                                               <p className="text-gray-300">{question.message}</p>
                                           </motion.div>
@@ -274,14 +299,131 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
                       variants={itemVariants}
                       className="lg:w-3/5"
                   >
-                    <div className="flex justify-between">
-                        <h2 className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 mb-6 flex items-center gap-2">
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 flex items-center gap-2">
                           <Star className="w-6 h-6 text-purple-400" />
                           Testimonials
-                      </h2>
-                      <Button className="bg-gradient-to-r from-rose-500 to-pink-200 hover:from-rose-600 hover:to-pink-300 text-slate-900 font-bold" onClick={() => {
-                        router.push(`/wall-of-love/${spaceData?.id}`)
-                      }}>Explore your Wall of Love <HeartIcon className="fill-red-700 text-red-800"/></Button>
+                        </h2>
+                        <div className="flex gap-3">
+                            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                                <DialogTrigger asChild>
+                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                        <Button 
+                                            className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold shadow-lg"
+                                        >
+                                            View Wall of Love <HeartIcon className="fill-current ml-2 w-4 h-4"/>
+                                        </Button>
+                                    </motion.div>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[600px] bg-gray-900 border-gray-700">
+                                    <motion.div
+                                        variants={dialogVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                    >
+                                        <DialogHeader className="space-y-4">
+                                            <DialogTitle className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+                                                Choose Your Layout
+                                            </DialogTitle>
+                                            <DialogDescription className="text-gray-400">
+                                                Select a layout style for your testimonial widget and copy the embed code
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        
+                                        <div className="space-y-6 py-6">
+                                            {/* URL Display and Copy */}
+                                            <div className="space-y-2">
+                                                <label className="text-sm font-medium text-gray-300">Embed Code:</label>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="mt-3 flex-1 bg-gray-800 rounded-lg border border-gray-700 p-3 font-mono text-sm text-gray-300">
+                                                        {layoutCode}
+                                                    </div>
+                                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                                        <Button
+                                                            onClick={copyLayoutCode}
+                                                            size="sm"
+                                                            className="bg-gray-700 hover:bg-gray-600"
+                                                        >
+                                                            <Copy className="w-4 h-4" />
+                                                        </Button>
+                                                    </motion.div>
+                                                </div>
+                                            </div>
+
+                                            {/* Layout Selection */}
+                                            <div className="space-y-4">
+                                                <label className="text-sm font-medium text-gray-300">Layout Style:</label>
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    {/* Carousel Option */}
+                                                    <motion.div
+                                                        whileHover={{ scale: 1.02 }}
+                                                        whileTap={{ scale: 0.98 }}
+                                                        onClick={() => setLayout("carousel")}
+                                                        className={`mt-3 p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                                                            layout === "carousel" 
+                                                                ? "border-purple-500 bg-purple-500/10" 
+                                                                : "border-gray-700 bg-gray-800/50 hover:border-gray-600"
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-center gap-2 mb-3">
+                                                            <RotateCcw className="w-5 h-5 text-purple-400" />
+                                                            <span className="font-medium text-gray-200">Carousel</span>
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            <div className="h-2 bg-gray-700 rounded animate-pulse"></div>
+                                                            <div className="h-2 bg-gray-700 rounded w-3/4 animate-pulse"></div>
+                                                            <div className="flex justify-center gap-1 mt-3">
+                                                                <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
+                                                                <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                                                                <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
+
+                                                    {/* Masonry Option */}
+                                                    <motion.div
+                                                        whileHover={{ scale: 1.02 }}
+                                                        whileTap={{ scale: 0.98 }}
+                                                        onClick={() => setLayout("masonry")}
+                                                        className={`mt-3 p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                                                            layout === "masonry" 
+                                                                ? "border-blue-500 bg-blue-500/10" 
+                                                                : "border-gray-700 bg-gray-800/50 hover:border-gray-600"
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-center gap-2 mb-3">
+                                                            <Grid3X3 className="w-5 h-5 text-blue-400" />
+                                                            <span className="font-medium text-gray-200">Masonry</span>
+                                                        </div>
+                                                        <div className="grid grid-cols-2 gap-2">
+                                                            <div className="space-y-1">
+                                                                <div className="h-3 bg-gray-700 rounded animate-pulse"></div>
+                                                                <div className="h-2 bg-gray-700 rounded animate-pulse"></div>
+                                                            </div>
+                                                            <div className="space-y-1">
+                                                                <div className="h-2 bg-gray-700 rounded animate-pulse"></div>
+                                                                <div className="h-3 bg-gray-700 rounded animate-pulse"></div>
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <DialogFooter>
+                                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                                <Button 
+                                                    onClick={() => setIsDialogOpen(false)}
+                                                    className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
+                                                >
+                                                    Done
+                                                </Button>
+                                            </motion.div>
+                                        </DialogFooter>
+                                    </motion.div>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
                     </div>
                       
                       <div className="space-y-6">
@@ -292,8 +434,9 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
                                       initial={{ opacity: 0, y: 20 }}
                                       animate={{ opacity: 1, y: 0 }}
                                       transition={{ delay: index * 0.1 }}
+                                      whileHover={{ scale: 1.02 }}
                                   >
-                                      <Card className="bg-gray-800/30 border-gray-700/50 hover:bg-gray-800/40 transition-all duration-300">
+                                      <Card className="bg-gray-800/30 border-gray-700/50 hover:bg-gray-800/40 transition-all duration-300 backdrop-blur-sm">
                                           <CardHeader>
                                               <div className="flex justify-between items-start">
                                                   <div className="space-y-2">
@@ -314,16 +457,27 @@ export default function SpaceInfo({ params } : { params: Promise<{ spaceId: stri
                                                           </div>
                                                       )}
                                                   </div>
-                                                  <div className="flex">
-                                                      {[...Array(testimonial.rating)].map((_, i) => (
-                                                          <Star
-                                                              key={i}
-                                                              className="w-4 h-4 text-yellow-400 fill-yellow-400"
-                                                          />
-                                                      ))}
-                                                  </div>
-                                                  <div className="cursor-pointer" onClick={() => handleLike(testimonial.id, testimonial.isLiked)}>
-                                                      {testimonial.isLiked ? <Heart className="text-red-700 fill-red-700"/> : <Heart className="text-white"/>}
+                                                  <div className="flex items-center gap-3">
+                                                      <div className="flex">
+                                                          {[...Array(testimonial.rating)].map((_, i) => (
+                                                              <Star
+                                                                  key={i}
+                                                                  className="w-4 h-4 text-yellow-400 fill-yellow-400"
+                                                              />
+                                                          ))}
+                                                      </div>
+                                                      <motion.div 
+                                                          whileHover={{ scale: 1.1 }} 
+                                                          whileTap={{ scale: 0.9 }}
+                                                          className="cursor-pointer" 
+                                                          onClick={() => handleLike(testimonial.id, testimonial.isLiked)}
+                                                      >
+                                                          <Heart className={`w-5 h-5 transition-colors ${
+                                                              testimonial.isLiked 
+                                                                  ? "text-red-500 fill-red-500" 
+                                                                  : "text-gray-400 hover:text-red-400"
+                                                          }`} />
+                                                      </motion.div>
                                                   </div>
                                               </div>
                                           </CardHeader>
